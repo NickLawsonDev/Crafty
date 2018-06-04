@@ -1,0 +1,7 @@
+1. Finish Pong physics
+2. Add scoring to Pong
+3. Add music/sfx to Pong
+4. Add AI
+5. Fix all the bugs with Pong
+6. Start refactoring every new system to make this look a lot nicer
+7. Start work on Pac man 
