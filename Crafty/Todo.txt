@@ -1,5 +1,5 @@
-1. Finish Pong physics
-2. Add scoring to Pong
+1. Finish Pong physics ( fix all the bugs with it )
+2. Add scoring to Pong ( fix the bugs with it )
 3. Add music/sfx to Pong
 4. Add AI
 5. Fix all the bugs with Pong
