@@ -41,7 +41,7 @@ namespace Crafty
             graphics.PreferredBackBufferHeight = 800;
             graphics.PreferredBackBufferWidth = 1200;
             Content.RootDirectory = "Content";
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
 
             player1 = new Rectangle
             {
@@ -139,67 +139,40 @@ namespace Crafty
             //Player 1 Up. Should refactor into Input system on each player controller
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                if (player1.Y - 10 <= 0)
-                    player1.Y = 0;
-                else
-                    player1.Y -= 10;
+                player1.Y -= 10;
             }
             //Player 1 Down
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                if (player1.Y + player1.Height + 10 >= graphics.PreferredBackBufferHeight)
-                    player1.Y = graphics.PreferredBackBufferHeight - player1.Height;
-                else
-                    player1.Y += 10;
+                player1.Y += 10;
             }
             //Player 2 Up
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                if (player2.Y - 10 <= 0)
-                    player2.Y = 0;
-                else
-                    player2.Y -= 10;
+                player2.Y -= 10;
             }
             //Player 2 Down
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                if (player2.Y + player2.Height + 10 >= graphics.PreferredBackBufferHeight)
-                    player2.Y = graphics.PreferredBackBufferHeight - player2.Height;
-                else
-                    player2.Y += 10;
+                player2.Y += 10;
             }
 
             if (!ball.Intersects(player1))
             {
                 if (!ball.Intersects(player2))
                 {
-                    if (ball.Right >= graphics.PreferredBackBufferWidth)
+                    //Checks to see if ball hits the top or bottom of the screen
+                    if (ball.Bottom >= graphics.PreferredBackBufferHeight || ball.Top <= 0)
                     {
-                        ball.X = graphics.PreferredBackBufferWidth - ball.Width;
-                        ballVX = -ballVX;
-                        ball.X += ballVX;
-                        player1Score++;
-                    }
-                    else if (ball.Right <= 0)
-                    {
-                        ball.X = 0 + ball.Width;
-                        ballVX = -ballVX;
-                        ball.X += ballVX;
-                        player2Score++;
-                    }
-                    else if (ball.Bottom <= 0)
-                    {
-                        ball.Y = 0 + ball.Height;
                         ballVY = -ballVY;
                         ball.Y += ballVY;
                     }
-                    else if (ball.Top >= graphics.PreferredBackBufferHeight)
+                    else if (ball.Right >= graphics.PreferredBackBufferWidth || ball.Left <= 0)
                     {
-                        ball.Y = graphics.PreferredBackBufferHeight - ball.Height;
-                        ballVY = -ballVY;
-                        ball.Y += ballVY;
+                        ballVX = -ballVX;
+                        ball.X += ballVX;
                     }
-                    else
+                    else 
                     {
                         ball.X += ballVX;
                         ball.Y += ballVY;
@@ -207,93 +180,37 @@ namespace Crafty
                 }
                 else
                 {
-                    //Checking for top hit
-                    if (ball.Top == player2.Top)
-                    {
-                        //if true it means its a top left corner hit
-                        if (ball.Right >= player2.Left || ball.Left <= player2.Right)
-                        {
-                            ball.X = ball.Right >= player2.Left ? player2.Left - 5 : player2.Right + 5;
-                            ballVX = -ballVX;
-                            ball.X += ballVX;
-                        }
-                        else
-                        {
-                            //top hit
-                            ballVY = -ballVY;
-                            ball.Y += ballVY;
-                        }
-                    }
-                    //Checking for bottom hit
-                    else if (ball.Bottom == player2.Bottom)
-                    {
-                        //if true it means its a bottom corner hit
-                        if (ball.Right >= player2.Left || ball.Left <= player2.Right)
-                        {
-                            ball.X = ball.Right >= player2.Left ? player2.Left - 5 : player2.Right + 5;
-                            ballVX = -ballVX;
-                            ball.X += ballVX;
-                        }
-                        else
-                        {
-                            //bottom hit
-                            ballVY = -ballVY;
-                            ball.Y += ballVY;
-                        }
-                    }
-                    else
-                    {
-                        ballVX = -ballVX;
-                        ball.X += ballVX;
-                        ballVY = -ballVY;
-                        ball.Y += ballVY;
-                    }
-                }
-            }
-            else
-            {
-                //Checking for top hit
-                if (ball.Top == player1.Top)
-                {
-                    //if true it means its a top left corner hit
-                    if (ball.Right >= player1.Left || ball.Left <= player1.Right)
-                    {
-                        ball.X = ball.Right >= player1.Left ? player1.Left - 5 : player1.Right + 5;
-                        ballVX = -ballVX;
-                        ball.X += ballVX;
-                    }
-                    else
-                    {
-                        //top hit
-                        ballVY = -ballVY;
-                        ball.Y += ballVY;
-                    }
-                }
-                //Checking for bottom hit
-                else if (ball.Bottom == player1.Bottom)
-                {
-                    //if true it means its a bottom corner hit
-                    if (ball.Right >= player1.Left || ball.Left <= player1.Right)
-                    {
-                        ball.X = ball.Right >= player1.Left ? player1.Left - 5 : player1.Right + 5;
-                        ballVX = -ballVX;
-                        ball.X += ballVX;
-                    }
-                    else
-                    {
-                        //bottom hit
-                        ballVY = -ballVY;
-                        ball.Y += ballVY;
-                    }
-                }
-                else
-                {
+                    //P2 Right Hit
+                    if (ball.Left >= player2.Right)
+                        ball.X = player2.Right;
+                    //P2 Left Hit
+                    else if (ball.Right >= player2.Left)
+                        ball.X = player2.Left - 30;
+                    //P2 Top Hit
+                    else if (ball.Bottom >= player2.Top)
+                        ball.Y = player2.Top - 30;
+                    //P2 Bottom Hit
+                    else if (ball.Top <= player2.Bottom)
+                        ball.Y = player2.Bottom;
+
                     ballVX = -ballVX;
                     ball.X += ballVX;
                     ballVY = -ballVY;
                     ball.Y += ballVY;
                 }
             }
+            else
+            {
+                ballVX = -ballVX;
+                ball.X += ballVX;
+                ballVY = -ballVY;
+                ball.Y += ballVY;
+            }
+
+            //MathHelper.Clamp(player1.X, 0, graphics.PreferredBackBufferWidth - ball.Width);
+            player1.Y = MathHelper.Clamp(player1.Y, 0, graphics.PreferredBackBufferHeight - player1.Height);
+            player2.Y = MathHelper.Clamp(player2.Y, 0, graphics.PreferredBackBufferHeight - player2.Height);
+            ball.Y = MathHelper.Clamp(ball.Y, 0, graphics.PreferredBackBufferHeight - ball.Height);
 
             base.Update(gameTime);
         }
